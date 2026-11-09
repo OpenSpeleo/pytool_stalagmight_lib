@@ -1,0 +1,208 @@
+[build-system]
+requires = [
+    "flit_core>=3.12.0,<5"
+]
+build-backend = "flit_core.buildapi"
+
+[tool.flit.sdist]
+include = ["docs/*.md", "tests/*.py", "tests/models/*.py", "tests/artifacts/example.stalx"]
+
+[tool.uv]
+package = true
+
+[dependency-groups]
+dev = [
+    "flit>=4,<5",
+    "prek>=0.4,<1",
+    "ruff>=0.16,<1"
+]
+
+[project]
+name = "stalagmight_lib"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+keywords = ["cave", "survey", "karst"]
+authors = [{ name = "Jonathan Dekhtiar", email = "jonathan@dekhtiar.com" }]
+maintainers = [{ name = "Jonathan Dekhtiar", email = "jonathan@dekhtiar.com" }]
+classifiers = [
+    # How mature is this project? Common values are
+    #   3 - Alpha
+    #   4 - Beta
+    #   5 - Production/Stable
+    "Development Status :: 3 - Alpha",
+
+    # Indicate who your project is intended for
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: Information Technology",
+    "Topic :: Software Development :: Build Tools",
+    "Topic :: Scientific/Engineering",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Utilities",
+
+    # Pick your license as you wish
+    "License :: OSI Approved :: Apache Software License",
+
+    # Not OS Specific
+    "Operating System :: OS Independent",
+
+    # Specify the Python versions you support here. In particular, ensure
+    # that you indicate you support Python 3. These classifiers are *not*
+    # checked by "pip install". See instead "requires-python" key in this file.
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+]
+dependencies = ["pydantic>=2.12,<3"]
+dynamic = ["description", "version"]
+
+[project.optional-dependencies]
+test = ["hypothesis>=6.128,<7", "pytest>=9.0.3,<10", "pytest-cov>=7.1.0,<8"]
+
+[project.urls]
+"Homepage" = "https://pypi.org/project/stalagmight-lib/"
+"Bug Reports" = "https://github.com/OpenSpeleo/pytool_stalagmight_lib/issues"
+"Source" = "https://github.com/OpenSpeleo/pytool_stalagmight_lib"
+
+[project.scripts]
+stalagmight = "stalagmight_lib.commands.main:main"
+
+[project.entry-points."stalagmight.actions"]
+convert = "stalagmight_lib.commands.convert:convert"
+
+[tool.pytest.ini_options]
+testpaths = ["tests/"]
+addopts = "-vvv --cov=stalagmight_lib --cov-report=term-missing"
+# addopts = "-vvv --cov=stalagmight_lib --cov-report=term-missing --capture=no"
+
+[tool.isort]
+profile = "black"
+
+[tool.ruff]
+# Exclude a variety of commonly ignored directories.
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "*/migrations/*.py",
+    "staticfiles/*",
+]
+# Same as Django: https://github.com/cookiecutter/cookiecutter-django/issues/4792.
+line-length = 88
+indent-width = 4
+
+[tool.ruff.lint]
+select = [
+    "F",
+    "E",
+    "W",
+    "C90",
+    "I",
+    "N",
+    "UP",
+    "YTT",
+    # "ANN", # flake8-annotations: we should support this in the future but 100+ errors atm
+    "ASYNC",
+    "S",
+    "BLE",
+    "FBT",
+    "B",
+    "A",
+    "COM",
+    "C4",
+    "DTZ",
+    "T10",
+    "DJ",
+    "EM",
+    "EXE",
+    "FA",
+    'ISC',
+    "ICN",
+    "G",
+    'INP',
+    'PIE',
+    "T20",
+    'PYI',
+    'PT',
+    "Q",
+    "RSE",
+    "RET",
+    "SLF",
+    "SLOT",
+    "SIM",
+    "TID",
+    "TCH",
+    "INT",
+    # "ARG", # Unused function argument
+    "PTH",
+    "ERA",
+    "PD",
+    "PGH",
+    "PL",
+    "TRY",
+    "FLY",
+    # "NPY",
+    # "AIR",
+    "PERF",
+    # "FURB",
+    # "LOG",
+    "RUF",
+]
+ignore = [
+    "COM812", # Checks for the absence of trailing commas.
+    "DTZ007", # Checks for uses of datetime.datetime.strptime() that lead to naive
+    # datetime objects.
+    "EM101",  # Checks for the use of string literals in exception constructors.
+    "EM102",  # Checks for the use of f-strings in exception constructors.
+    "ERA001", # Checks for commented-out Python code.
+    "EXE001", # Checks for a shebang directive in a file that is not executable.
+    "FBT001", # Checks for the use of boolean positional arguments in function
+    # definitions, as determined by the presence of a bool type hint.
+    "FBT002", # Checks for the use of boolean positional arguments in function
+    # definitions, as determined by the presence of a boolean default value.
+    "N806",    # Checks for the use of non-lowercase variable names in functions.
+    "N815",    # Checks for class variable names that follow the mixedCase convention.
+    "PLR0913", # Checks for function definitions that include too many arguments.
+    "PLR2004", # Checks for the use of unnamed numerical constants ("magic") values in
+    # comparisons.
+    "PYI024", # Checks for uses of collections.namedtuple in stub files.
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+    "S101",   # Use of assert detected https://docs.astral.sh/ruff/rules/assert/
+    "S311",   # Checks for uses of cryptographically weak pseudo-random number generators.
+    "SIM102", # sometimes it's better to nest
+    "TRY003", # Checks for long exception messages that are not defined in the exception
+    # class itself.
+    "UP009", # Checks for unnecessary UTF-8 encoding declarations.
+]
+# Allow fix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+unfixable = []
+# Allow unused variables when underscore-prefixed.
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+
+[tool.ruff.lint.isort]
+force-single-line = true

@@ -1,0 +1,88 @@
+---
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v7
+
+      - uses: j178/prek-action@v2
+        with:
+          install-only: true
+
+      - run: |
+          prek run \
+            --show-diff-on-failure \
+            --color always \
+            --all-files
+
+  # With no caching at all the entire ci process takes 3m to complete!
+  pytest:
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ["3.11", "3.12", "3.13", "3.14"]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code Repository
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: ${{ matrix.python }}
+
+      - name: Install Dependencies
+        run: uv sync --frozen --all-extras --dev
+
+      - name: Test with pytest
+        run: |
+          uv run python --version
+          uv run pytest
+
+  trigger-release:
+    name: Trigger release
+    needs: [linter, pytest]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    permissions:
+      actions: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Fetch latest tags
+        run: git fetch --tags --force
+
+      - name: Dispatch release if commit is tagged
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG=$(git tag --points-at HEAD | grep '^v' | head -1)
+          if [ -z "$TAG" ]; then
+            echo "No v* tag on HEAD — skipping release"
+            exit 0
+          fi
+          echo "Found tag $TAG — dispatching release workflow"
+          gh workflow run release.yml --ref "$TAG"
