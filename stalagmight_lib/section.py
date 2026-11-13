@@ -75,7 +75,7 @@ class SurveySection(SurveyModel):
             )
             if comment.section_id != self.id:
                 raise ValueError(f"{context}: section_id does not match section")
-            if comment.station_index > len(self.shots):
+            if (comment.station_index & 0x7FFFFFFF) > len(self.shots):
                 raise ValueError(f"{context}: station_index exceeds shot count")
             if comment.station_index in stations:
                 raise ValueError(f"{context}: duplicate station_index")

@@ -2,7 +2,7 @@
 
 ## Project overview
 
-`stalagmight_lib` reads native schema-18 SQLite `.stalx` cave surveys into
+`stalagmight_lib` reads native schema-18/19 SQLite `.stalx` cave surveys into
 immutable Pydantic models and exports supported survey data as JSON.
 
 - `stalagmight_lib/parser.py`, `section.py`, and `shot.py`: reading and survey
@@ -16,9 +16,11 @@ immutable Pydantic models and exports supported survey data as JSON.
 Preserve native field values, SQL nulls, UUID identity, positional station
 comments, and bearing metadata. Cover malformed SQLite inputs, relationship
 validation, JSON round-trips, connection cleanup, and read-only behavior when
-changing parsing. Geometry, native writing, and corrections are outside the
-reader scope. `Survey` also preserves validated datum and station-merge metadata
-for input adapters; the reader does not apply it.
+changing parsing. Native writing and corrections are outside the reader scope.
+The required `loop_closure.py` module prepares immutable numerical snapshots
+separately from reading; it never mutates stored readings or applies layout
+metadata as controls. `Survey` also preserves validated datum and station-merge
+metadata for input adapters; the reader does not apply it.
 
 ## Documentation references
 

@@ -1,4 +1,4 @@
-"""Read schema-18 SQLite surveys in one read-only transaction."""
+"""Read schema-18/19 SQLite surveys in one read-only transaction."""
 
 import json
 import sqlite3
@@ -13,10 +13,15 @@ from stalagmight_lib.exceptions import DatabaseReadError
 from stalagmight_lib.exceptions import DataValidationError
 from stalagmight_lib.exceptions import StalagMightFormatError
 from stalagmight_lib.exceptions import UnsupportedSchemaError
+from stalagmight_lib.graph import AzimuthReference
+from stalagmight_lib.graph import LoopClosure
+from stalagmight_lib.graph import SectionOffset
+from stalagmight_lib.graph import ShotGraph
+from stalagmight_lib.graph import ShotNumbering
+from stalagmight_lib.graph import StationOffset
 from stalagmight_lib.section import StationComment
 from stalagmight_lib.section import SurveySection
 from stalagmight_lib.shot import SurveyShot
-from stalagmight_lib.survey import AzimuthReference
 from stalagmight_lib.survey import ProjectMetadata
 from stalagmight_lib.survey import StationMerge
 from stalagmight_lib.survey import Survey
@@ -103,7 +108,7 @@ def _default_reference(connection):
 def _native_reference(raw):
     if not isinstance(raw, str):
         raise TypeError("value must be JSON text")
-    value = json.loads(raw)
+    value = _json_object(raw)
     if not isinstance(value, dict):
         raise TypeError("value must be a JSON object")
     source = value.get("source")
@@ -122,7 +127,7 @@ def _native_reference(raw):
     return value
 
 
-def _read_project(connection, settings_present):
+def _read_project(connection, settings_present, version):
     projects = _rows(connection, "project", PROJECT_COLUMNS, "id")
     if len(projects) != 1:
         raise DataValidationError(
@@ -130,9 +135,10 @@ def _read_project(connection, settings_present):
         )
     project = projects[0]
     project_version = project.pop("schema_version")
-    if type(project_version) is not int or project_version != 18:
+    if type(project_version) is not int or project_version != version:
         raise UnsupportedSchemaError(
-            f"project.schema_version={project_version!r} conflicts with user_version=18"
+            f"project.schema_version={project_version!r} "
+            f"conflicts with user_version={version}"
         )
     project["default_azimuth_reference"] = (
         _default_reference(connection) if settings_present else None
@@ -154,8 +160,10 @@ def _read_geographic_metadata(connection):
 
 def _read(connection):
     version = connection.execute("PRAGMA user_version").fetchone()[0]
-    if version != 18:
-        raise UnsupportedSchemaError(f"PRAGMA user_version={version}; expected 18")
+    if version not in (18, 19):
+        raise UnsupportedSchemaError(
+            f"PRAGMA user_version={version}; expected 18 or 19"
+        )
     _columns(connection, "project", PROJECT_COLUMNS)
     _columns(connection, "sections", SECTION_COLUMNS)
     _columns(connection, "shots", SHOT_COLUMNS)
@@ -166,7 +174,7 @@ def _read(connection):
         connection, "project_settings", ("key", "value"), optional=True
     )
     geographic = _read_geographic_metadata(connection)
-    metadata = _read_project(connection, settings_present)
+    metadata = _read_project(connection, settings_present, version)
     section_rows = _rows(connection, "sections", SECTION_COLUMNS, "id")
     sections = {}
     for row in section_rows:
@@ -218,7 +226,15 @@ def _read(connection):
         for section in sections.values()
     )
     return _validate(
-        Survey, {"project": metadata, "sections": complete, **geographic}, "survey"
+        Survey,
+        {
+            "schema_version": version,
+            "project": metadata,
+            "sections": complete,
+            **geographic,
+            **_read_native_metadata(connection, settings_present),
+        },
+        "survey",
     )
 
 
@@ -263,3 +279,111 @@ class StalagMightParser:
 
     def to_json(self) -> str:
         return self.data.model_dump_json(indent=2)
+
+
+def _json_object(raw):
+    def unique(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"duplicate JSON key {key}")
+            result[key] = value
+        return result
+
+    value = json.loads(raw, object_pairs_hook=unique)
+    if not isinstance(value, dict):
+        raise TypeError("expected a JSON object")
+    return value
+
+
+def _setting(connection, key):
+    rows = connection.execute(
+        "SELECT value FROM project_settings WHERE key = ?", (key,)
+    ).fetchall()
+    if len(rows) > 1:
+        raise DataValidationError(f"project_settings key {key}: duplicate key")
+    if not rows:
+        return None
+    try:
+        return _json_object(rows[0][0])
+    except (ValueError, TypeError) as exc:
+        raise DataValidationError(f"project_settings key {key}: {exc}") from exc
+
+
+def _graph_setting(graph):
+    for key, field in (
+        ("origins", "parent"),
+        ("root_positions", "value"),
+        ("azimuth_overrides", "reference"),
+        ("geometry_locks", "locked"),
+    ):
+        mapping = graph.get(key, {})
+        if not isinstance(mapping, dict):
+            raise DataValidationError(f"shot_graph {key}: expected object")
+        entries = []
+        for number, payload in mapping.items():
+            if not number.isdecimal() or str(int(number)) != number:
+                raise DataValidationError("shot_graph: noncanonical number key")
+            try:
+                decoded = (
+                    tuple(payload)
+                    if key == "root_positions"
+                    else _native_reference(json.dumps(payload))
+                    if key == "azimuth_overrides"
+                    else payload
+                )
+            except (ValueError, TypeError) as exc:
+                raise DataValidationError(f"shot_graph {key}: {exc}") from exc
+            entries.append({"number": int(number), field: decoded})
+        graph[key] = tuple(sorted(entries, key=lambda entry: entry["number"]))
+    return _validate(ShotGraph, graph, "shot_graph")
+
+
+def _read_native_metadata(connection, settings_present):
+    result = _read_native_tables(connection)
+    if not settings_present:
+        return result
+    numbering = _setting(connection, "shot_numbering")
+    if numbering is not None:
+        if set(numbering) != {"next", "identities"} or not isinstance(
+            numbering["identities"], dict
+        ):
+            raise DataValidationError("shot_numbering: malformed registry")
+        numbering["identities"] = tuple(
+            {"identity": key, "number": value}
+            for key, value in sorted(numbering["identities"].items())
+        )
+        result["shot_numbering"] = _validate(ShotNumbering, numbering, "shot_numbering")
+    graph = _setting(connection, "shot_graph")
+    if graph is not None:
+        result["shot_graph"] = _graph_setting(graph)
+    return result
+
+
+def _read_native_tables(connection):
+    result = {}
+    for table, model in (
+        ("loop_closures", LoopClosure),
+        ("section_offsets", SectionOffset),
+        ("station_offsets", StationOffset),
+    ):
+        required = tuple(
+            name for name, field in model.model_fields.items() if field.is_required()
+        )
+        if not _columns(connection, table, required, optional=True):
+            continue
+        available = {
+            row[1] for row in connection.execute(f'PRAGMA table_info("{table}")')
+        }
+        columns = tuple(name for name in model.model_fields if name in available)
+        rows = _rows(connection, table, columns, ", ".join(required[:1]))
+        for row in rows:
+            if "is_aligned" in row and row["is_aligned"] is not None:
+                if type(row["is_aligned"]) is not int or row["is_aligned"] not in (
+                    0,
+                    1,
+                ):
+                    raise DataValidationError("loop_closures: invalid is_aligned")
+                row["is_aligned"] = bool(row["is_aligned"])
+        result[table] = tuple(_validate(model, row, table) for row in rows)
+    return result

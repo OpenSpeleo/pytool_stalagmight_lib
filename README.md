@@ -1,8 +1,8 @@
 # stalagmight_lib
 
 Read native StalagMight `.stalx` surveys into immutable Pydantic v2 models.
-Python support is defined in `pyproject.toml` and the CI matrix. **Schema 18 is
-the only supported file version.**
+Python support is defined in `pyproject.toml` and the CI matrix. **Native
+schemas 18 and 19 are supported.**
 
 ```bash
 pip install stalagmight_lib
@@ -140,3 +140,33 @@ Each Pydantic model has independent Hypothesis property tests for its
 validation, immutability, and JSON round-trips. Parser regressions separately
 exercise SQLite schemas and relationships. Hypothesis is included in the package
 test extra.
+
+## Native topology and loop closure
+
+The frozen survey preserves closure records, section/station offsets, permanent
+shot numbering including retired identities, and native graph settings. Explicit
+schema-19 topology uses separate start/end identities per permanent shot number,
+including the native high-bit interior-start discriminant. Live origin cycles
+remain intact; broken retired ancestry and missing live mappings are rejected.
+The reader performs no migration, repair, renumbering, or native save.
+
+`stalagmight_lib.loop_closure.prepare_loop_closure` prepares native topology for
+`cave_closure`, a required dependency installed with the package. Callers
+explicitly select spatial or horizontal mode and provide independent Cartesian
+placement covariance through `sigma_m`. Horizontal loop closure also requires
+`preserved_z_policy="raw_endpoint_depth"`. Conflicting shared endpoint Z values
+are rejected rather than averaged. Root positions and geometry locks remain
+editing metadata. Native GPS datums require caller-projected ENU controls.
+
+Native closure records are evidence until activated. Aligned closures assert
+identity in the selected dimensions. Non-Move aligned closures require an
+explicit `baseline_policy="accept_potentially_adjusted_measurements"` because
+stored measurements may have been destructively adjusted. Otherwise use
+`baseline_policy="stored_measurements"`. These flags cannot recover original
+readings or prove history. Non-normal native shot kinds require a further
+explicit relationship interpretation and are currently rejected by
+normalization. Reader fidelity remains independent of numerical eligibility.
+
+Snapshots own source evidence and bind results to covariance, frame policies,
+and controls. OpenSpeleo can prepare and export these results directly without
+passing through its legacy display forest.

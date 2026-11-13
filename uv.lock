@@ -12,6 +12,40 @@ wheels = [
 ]
 
 [[package]]
+name = "cave-closure"
+version = "0.0.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/10/0e/d7b020f38dc1c4db3ec88318815e2c98bdfa723511b2ea756f66d5ad267e/cave_closure-0.0.1.tar.gz", hash = "sha256:f4264d4f04bc0e4a41f1cdae784b192e16d0403069f483c501604eb416ff9748", size = 16431850, upload-time = "2026-11-13T03:50:35.866Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/35/ea/36fb3872edb5b9babad12acb3db72928b28b793b3511e5e89957da339ee3/cave_closure-0.0.1-cp311-abi3-macosx_10_12_x86_64.whl", hash = "sha256:c6016a20dce2bae15b354a183ece939df088830187472431f35cd3beac5e1583", size = 719121, upload-time = "2026-11-13T03:49:56.995Z" },
+    { url = "https://files.pythonhosted.org/packages/66/da/db6ab02d6db9349a52d3b4296f9bd4072e96b10159b1d08d52ad7f783eae/cave_closure-0.0.1-cp311-abi3-macosx_11_0_arm64.whl", hash = "sha256:7b340388849fd96af8278cf93e0369cf6aeb23a7864a882a99da6ec101b0821b", size = 673326, upload-time = "2026-11-13T03:49:58.506Z" },
+    { url = "https://files.pythonhosted.org/packages/53/13/a6da87af84154bf0d89594d4e1097892e8124f42654a4b8f70a7c9c6b8e8/cave_closure-0.0.1-cp311-abi3-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:aec1092b3a3d5943264bf9fe7ad0f0eec1616d3bf015010e2ca0652cc70ea792", size = 734332, upload-time = "2026-11-13T03:49:59.843Z" },
+    { url = "https://files.pythonhosted.org/packages/aa/7f/759d302f448797644bcb0fa0b411750426fc8a7514215658da48cec42da6/cave_closure-0.0.1-cp311-abi3-manylinux2014_armv7l.manylinux_2_17_armv7l.whl", hash = "sha256:6383cdc40c9c45ab5a1be25b788d657073cb197f581718ab3ce22cfecc8627db", size = 731918, upload-time = "2026-11-13T03:50:01.3Z" },
+    { url = "https://files.pythonhosted.org/packages/c6/b2/e5e8933f538525f65221359d86f79558ee82d9edc33057731d5e0dc3326e/cave_closure-0.0.1-cp311-abi3-manylinux2014_i686.manylinux_2_17_i686.whl", hash = "sha256:df6da5e2728c68a01bdf1b0916fc7b2cdeb24dee58e28912534c9bb4de477113", size = 824778, upload-time = "2026-11-13T03:50:02.891Z" },
+    { url = "https://files.pythonhosted.org/packages/4d/51/51a36e62cb5f62eda89f6828fa0e934e0001fb16264f09f460630fa06198/cave_closure-0.0.1-cp311-abi3-manylinux2014_ppc64.manylinux_2_17_ppc64.whl", hash = "sha256:6dbbce069658797611b2df999cc67aa23af61b6730b4eebef54928a3484b9b1f", size = 912022, upload-time = "2026-11-13T03:50:04.617Z" },
+    { url = "https://files.pythonhosted.org/packages/7b/44/95b17531aa15888fa20a73a0ea71568cb07dfba4152ed9f9997ebd41d474/cave_closure-0.0.1-cp311-abi3-manylinux2014_ppc64le.manylinux_2_17_ppc64le.whl", hash = "sha256:d9705b0ed47767fcdfedb7dacf5f59aa8cb04cc9be7cd13e0ee2a6b443f9abab", size = 919926, upload-time = "2026-11-13T03:50:06.034Z" },
+    { url = "https://files.pythonhosted.org/packages/61/51/eab66b20f27679c177a4fd21ac839522881d9fa6577aee63d552f152a50f/cave_closure-0.0.1-cp311-abi3-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:8637b93cdd5206f0088f775fd38c0a9f9b55ba8153117c215343999492e0013e", size = 779604, upload-time = "2026-11-13T03:50:07.677Z" },
+    { url = "https://files.pythonhosted.org/packages/9b/1a/8841df2e49c9b4d89beac3d0b4a972a352b1da58374c0f915762bc36ace9/cave_closure-0.0.1-cp311-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:0fcd76aef6f729877809a274fb077aa4864ab560e9e501e92f8d9a8e936fbe27", size = 910756, upload-time = "2026-11-13T03:50:09.427Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/e3/4986fed1d62e1cdbd3d5a7b73735140a81fcae0cf443a50b71bc2d5e5aa1/cave_closure-0.0.1-cp311-abi3-musllinux_1_2_armv7l.whl", hash = "sha256:929556a4faeb18e05fdc087727a07506ba9eec4df82d092c809e4161cf31ac16", size = 1007053, upload-time = "2026-11-13T03:50:10.802Z" },
+    { url = "https://files.pythonhosted.org/packages/8e/b9/f50c81a281f06a01b9233f3f82416629ca0cd3bc5397c738e3e9ac60f21c/cave_closure-0.0.1-cp311-abi3-musllinux_1_2_i686.whl", hash = "sha256:88f6d6615c3b5f88501ed90810b9f0661a77d2a69412ffc26c6ea25ecbcbc053", size = 1014099, upload-time = "2026-11-13T03:50:12.417Z" },
+    { url = "https://files.pythonhosted.org/packages/90/fb/5e92ab7c9d61f5587a556b826b3e77666513a08b00baa0d030e74a3bd307/cave_closure-0.0.1-cp311-abi3-musllinux_1_2_ppc64le.whl", hash = "sha256:2fa7876ad250072029e7fe9140686387e0480b35bf42ed6580e9aeb592985e7e", size = 1052203, upload-time = "2026-11-13T03:50:13.816Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/15/73c45c916dd659bc75a0f8e5c78e8e3d4c3ad8a8b8cc2646993663ee7bfb/cave_closure-0.0.1-cp311-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:7728673b13fd02949752a31dd7e83e0c379ca25a4e4659a935f974c6d1cfccfa", size = 989180, upload-time = "2026-11-13T03:50:15.532Z" },
+    { url = "https://files.pythonhosted.org/packages/ad/63/8633c926bda48675cbdfbbd4f6168f04a47b2f0b9aa293100fe0b7791957/cave_closure-0.0.1-cp311-abi3-win32.whl", hash = "sha256:35eabdd54b5ed48c823c76d342325adf8c0d2fa539b1c3699d2e0392e960201d", size = 541696, upload-time = "2026-11-13T03:50:16.903Z" },
+    { url = "https://files.pythonhosted.org/packages/49/0c/3fcbd15ac24d53def02068a8ac745035707f3843e09cce23844c46aa18a6/cave_closure-0.0.1-cp311-abi3-win_amd64.whl", hash = "sha256:292078445c001cf8d683c32b2c149a15d2ebd80771f53c5c0103d5cc24cd2b6f", size = 599805, upload-time = "2026-11-13T03:50:18.264Z" },
+    { url = "https://files.pythonhosted.org/packages/9e/54/ec87f1abd23e254cbde5b4a36ea7acd9ad81e15f5bb80bee6e4834b23ed3/cave_closure-0.0.1-cp311-abi3-win_arm64.whl", hash = "sha256:783be3648dc92f9970ed8f44bdea7e5dc313838e5d59f44c3377e4fa151b7a25", size = 544597, upload-time = "2026-11-13T03:50:19.556Z" },
+    { url = "https://files.pythonhosted.org/packages/0d/02/5f5cee1fa505401ac449b6871b4f63fec450199a9a78c7607ac71bc0af6d/cave_closure-0.0.1-cp314-cp314t-macosx_10_12_x86_64.whl", hash = "sha256:2ce92245ebd6cc4ad329b34a5220a702c8281cfeca2c68f2cbed398fb6763d82", size = 717665, upload-time = "2026-11-13T03:50:20.841Z" },
+    { url = "https://files.pythonhosted.org/packages/6e/53/58f39f6c756448b60b45cf7675752c216b062a994c680ca627417f4f0414/cave_closure-0.0.1-cp314-cp314t-macosx_11_0_arm64.whl", hash = "sha256:afaf638e7a8c12d26494650e33dcfa697abce565412d88361df9070ac92b8dcf", size = 668939, upload-time = "2026-11-13T03:50:22.358Z" },
+    { url = "https://files.pythonhosted.org/packages/7e/68/fa391bb9226b034f72d1ecdb794ac9f4ac58d70332f394fed33c22ccc560/cave_closure-0.0.1-cp314-cp314t-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:28a31182da1183abd016bd74ce8b104c4810ac505070cc9dcb4564be3a3d7392", size = 729897, upload-time = "2026-11-13T03:50:23.845Z" },
+    { url = "https://files.pythonhosted.org/packages/75/59/0e3f9c77c61373f5671127d6540043aed687762b653b9171f0fcbf13a44c/cave_closure-0.0.1-cp314-cp314t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:899827b5b178441ca9bf283e24eb446d3923f4b7e2d2cd6bfbe13b75135992bc", size = 775649, upload-time = "2026-11-13T03:50:25.792Z" },
+    { url = "https://files.pythonhosted.org/packages/18/97/08f1477a7f24ee1b2f96d3ec77c63e92dad43aeaf32907cc8033f8649d0d/cave_closure-0.0.1-cp314-cp314t-win_amd64.whl", hash = "sha256:4058860303dd291b39a5ca476768904e76cbbebd34f0de3ac8a731665226fbe4", size = 594779, upload-time = "2026-11-13T03:50:27.1Z" },
+    { url = "https://files.pythonhosted.org/packages/6c/28/34154b9fc658e1586754bd8fce1e3721946fd6c62f27cdc0938c787f48b0/cave_closure-0.0.1-cp315-cp315t-macosx_10_12_x86_64.whl", hash = "sha256:b294a39510449f9cadfe48bcabbac27c7737c71502a93a48413745fe14666a7b", size = 718185, upload-time = "2026-11-13T03:50:28.752Z" },
+    { url = "https://files.pythonhosted.org/packages/07/6a/16ad1943783afc5ef59a83729655e4ec20c10f672a8f34a4bc2f612a8df0/cave_closure-0.0.1-cp315-cp315t-macosx_11_0_arm64.whl", hash = "sha256:f8fe2357ee811ee37b17aeb5c2b7020665799bed3b13ef8d58cf7b6873bfa83f", size = 668975, upload-time = "2026-11-13T03:50:30.102Z" },
+    { url = "https://files.pythonhosted.org/packages/ef/0f/ae890a1c8b4256823a6b6910db797339068da6706c4fc2e4b6d8414fe510/cave_closure-0.0.1-cp315-cp315t-manylinux2014_aarch64.manylinux_2_17_aarch64.whl", hash = "sha256:600d8f4176e7c3e960accb205e2ba0bbc44b875a49c85651a82cac3e1148b184", size = 730455, upload-time = "2026-11-13T03:50:31.592Z" },
+    { url = "https://files.pythonhosted.org/packages/fc/ff/59ec81de2b259a1dcfbd7e193a6eef9d086755264490d98f46a0aa5673d8/cave_closure-0.0.1-cp315-cp315t-manylinux2014_x86_64.manylinux_2_17_x86_64.whl", hash = "sha256:75c438adf8bbc71c97e3ccb3f97898486295879752f0d5c895bdd40fa0c87a9b", size = 775041, upload-time = "2026-11-13T03:50:32.948Z" },
+    { url = "https://files.pythonhosted.org/packages/f1/53/5b91be891af781c967bde604abec6ded9de8ec627dc2d2235f194c67de64/cave_closure-0.0.1-cp315-cp315t-win_amd64.whl", hash = "sha256:cfc10a76761bff2e466ca08805f39ad1156483dd048b0f649539a4e917d9b2e0", size = 595268, upload-time = "2026-11-13T03:50:34.235Z" },
+]
+
+[[package]]
 name = "certifi"
 version = "2026.10.23"
 source = { registry = "https://pypi.org/simple" }
@@ -734,6 +768,7 @@ wheels = [
 name = "stalagmight-lib"
 source = { editable = "." }
 dependencies = [
+    { name = "cave-closure" },
     { name = "pydantic" },
 ]
 
@@ -753,6 +788,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "cave-closure", specifier = "==0.0.1" },
     { name = "hypothesis", marker = "extra == 'test'", specifier = ">=6.128,<7" },
     { name = "pydantic", specifier = ">=2.12,<3" },
     { name = "pytest", marker = "extra == 'test'", specifier = ">=9.0.3,<10" },

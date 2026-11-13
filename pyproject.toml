@@ -8,6 +8,8 @@ build-backend = "flit_core.buildapi"
 include = ["docs/*.md", "tests/*.py", "tests/models/*.py", "tests/artifacts/example.stalx"]
 
 [tool.uv]
+# Flit derives version metadata from the package module.
+cache-keys = [{ file = "pyproject.toml" }, { file = "stalagmight_lib/__init__.py" }]
 package = true
 
 [dependency-groups]
@@ -53,7 +55,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = ["pydantic>=2.12,<3"]
+dependencies = ["cave-closure==0.0.1", "pydantic>=2.12,<3"]
 dynamic = ["description", "version"]
 
 [project.optional-dependencies]
