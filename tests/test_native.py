@@ -21,7 +21,7 @@ from stalagmight_lib import UnsupportedSchemaError
 from stalagmight_lib import read_stalx
 from tests.conftest import execute
 
-EXAMPLE = Path(__file__).parent / "artifacts/example.stalx"
+EXAMPLE = Path(__file__).parent / "artifacts/stalagmight.stalx"
 CHECKSUM = "e6f508f02257682be5f70f85029830f00b30d137cd1bba8db485d85b897df5a7"
 
 

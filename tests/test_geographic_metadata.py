@@ -33,7 +33,7 @@ def geographic(database):
 
 
 def test_example_metadata_unchanged():
-    path = Path(__file__).parent / "artifacts/example.stalx"
+    path = Path(__file__).parent / "artifacts/stalagmight.stalx"
     before, mtime = path.read_bytes(), path.stat().st_mtime_ns
     survey = read_stalx(path)
     assert len(survey.zero_datums) == 1

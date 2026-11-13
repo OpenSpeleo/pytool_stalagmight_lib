@@ -5,7 +5,8 @@ requires = [
 build-backend = "flit_core.buildapi"
 
 [tool.flit.sdist]
-include = ["docs/*.md", "tests/*.py", "tests/models/*.py", "tests/artifacts/example.stalx"]
+include = ["docs/"]
+exclude = ["tests/"]
 
 [tool.uv]
 # Flit derives version metadata from the package module.

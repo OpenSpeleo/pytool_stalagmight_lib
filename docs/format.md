@@ -10,10 +10,10 @@ columns are allowed, without becoming public model fields. Optional ordinary
 `station_comments`, `project_settings`, `zero_datums`, and `station_merges`
 tables may be absent.
 
-The checked-in `tests/artifacts/example.stalx` is 217,088 bytes, with 19 tables.
-Observed fixture facts: both version markers are 18; SQLite integrity and
-foreign-key checks pass; 37 sections contain 532 shots (467 normal, 60 jump, 5
-reference), 2 shot comments, and 74 station comments. Section IDs are
+The checked-in `tests/artifacts/stalagmight.stalx` is 217,088 bytes, with 19
+tables. Observed fixture facts: both version markers are 18; SQLite integrity
+and foreign-key checks pass; 37 sections contain 532 shots (467 normal, 60 jump,
+5 reference), 2 shot comments, and 74 station comments. Section IDs are
 noncontiguous and two distinct sections are named “Mainline North”. Nullable
 passage dimensions coexist with stored zeros. There are depth discontinuities.
 
