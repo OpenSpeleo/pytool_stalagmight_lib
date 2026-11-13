@@ -55,7 +55,7 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
 ]
-dependencies = ["cave-closure==0.0.1", "pydantic>=2.12,<3"]
+dependencies = ["pydantic>=2.12,<3"]
 dynamic = ["description", "version"]
 
 [project.optional-dependencies]

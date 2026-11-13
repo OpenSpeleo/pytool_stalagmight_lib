@@ -14,8 +14,8 @@ from pydantic import ValidationError
 from stalagmight_lib import DatabaseReadError
 from stalagmight_lib import DataValidationError
 from stalagmight_lib import ShotKind
-from stalagmight_lib import StalagMightFormatError
-from stalagmight_lib import StalagMightParser
+from stalagmight_lib import StalagmightFormatError
+from stalagmight_lib import StalagmightParser
 from stalagmight_lib import Survey
 from stalagmight_lib import UnsupportedSchemaError
 from stalagmight_lib import read_stalx
@@ -28,7 +28,7 @@ CHECKSUM = "e6f508f02257682be5f70f85029830f00b30d137cd1bba8db485d85b897df5a7"
 def test_example_all_fields():
     before = EXAMPLE.stat().st_mtime_ns
     assert hashlib.sha256(EXAMPLE.read_bytes()).hexdigest() == CHECKSUM
-    parser = StalagMightParser(EXAMPLE)
+    parser = StalagmightParser(EXAMPLE)
     survey = parser.data
     assert len(survey.sections) == 37
     assert len(survey.shots) == 532
@@ -240,20 +240,20 @@ def test_optional_tables(database, table):
             UnsupportedSchemaError,
             "schema_version",
         ),
-        ("DROP TABLE shots", StalagMightFormatError, "shots"),
+        ("DROP TABLE shots", StalagmightFormatError, "shots"),
         (
             "ALTER TABLE shots DROP COLUMN temperature",
-            StalagMightFormatError,
+            StalagmightFormatError,
             "temperature",
         ),
         (
             "ALTER TABLE station_comments DROP COLUMN comment",
-            StalagMightFormatError,
+            StalagmightFormatError,
             "comment",
         ),
         (
             "ALTER TABLE project_settings DROP COLUMN value",
-            StalagMightFormatError,
+            StalagmightFormatError,
             "value",
         ),
         ("DELETE FROM project", DataValidationError, "exactly one"),
@@ -422,11 +422,11 @@ def test_paths_and_containers(database, tmp_path):
         read_stalx(tmp_path)
     wrong = tmp_path / "wrong.txt"
     shutil.copyfile(database, wrong)
-    with pytest.raises(StalagMightFormatError, match="extension"):
+    with pytest.raises(StalagmightFormatError, match="extension"):
         read_stalx(wrong)
     wrong = tmp_path / "wrong.stalx"
     wrong.write_bytes(b"not sqlite")
-    with pytest.raises(StalagMightFormatError, match="signature"):
+    with pytest.raises(StalagmightFormatError, match="signature"):
         read_stalx(wrong)
     wrong.write_bytes(b"SQLite format 3\0" + b"bad" * 100)
     with pytest.raises(DatabaseReadError):
@@ -454,7 +454,7 @@ def test_ordinary_table_required(database):
             ' station_index,"text" AS comment'
         ),
     )
-    with pytest.raises(StalagMightFormatError, match="ordinary table"):
+    with pytest.raises(StalagmightFormatError, match="ordinary table"):
         read_stalx(database)
 
 

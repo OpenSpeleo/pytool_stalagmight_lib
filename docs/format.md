@@ -17,7 +17,7 @@ reference), 2 shot comments, and 74 station comments. Section IDs are
 noncontiguous and two distinct sections are named “Mainline North”. Nullable
 passage dimensions coexist with stored zeros. There are depth discontinuities.
 
-Semantics were compared against the native StalagMight application. Inspected
+Semantics were compared against the native Stalagmight application. Inspected
 source paths are given relative to that upstream repository; this reference
 needs no sibling checkout:
 
@@ -71,7 +71,7 @@ retained verbatim, except the project schema version is on `Survey`.
 | `direction`            | TEXT              | No               | `SurveyDirection`  | TEXT in or out.                                             |
 | `quality`              | REAL              | No               | `float`            | Finite dimensionless section weighting metadata.            |
 | `created_at`           | TEXT              | No               | `datetime`         | ISO timestamp with timezone, preserved instant.             |
-| `gauge_shot_uuid`      | TEXT              | Yes              | `UUID`             | Gauge shot identity metadata; no adjustment applied.        |
+| `gauge_shot_uuid`      | TEXT              | Yes              | `UUID`             | Gauge shot identity metadata; no correction applied.        |
 | `gauge_neighbour_uuid` | TEXT              | Yes              | `UUID`             | Gauge neighbour identity metadata.                          |
 | `reverse_parity`       | INTEGER           | No               | `bool`             | INTEGER 0 false, 1 true; other values rejected.             |
 | `azimuth_north`        | TEXT              | Yes              | `NorthReference`   | TEXT magnetic, true, grid; NULL means no override recorded. |
@@ -197,7 +197,7 @@ JSON is the supported survey data, not a full project backup. Measurements stay
 as stored; null, empty text, whitespace, Unicode and zero remain distinct. The
 reader never infers pitch, averages bearings, repairs inconsistent depth,
 applies corrections, or modifies native files. Geometry calculation,
-connectivity adjustment, closures, settings other than bearing reference,
+connectivity correction, closures, settings other than bearing reference,
 history, and native writing are outside the reader. Datums and merges are
 preserved as metadata for adapters such as OpenSpeleo. Only schema 18 is
 supported.

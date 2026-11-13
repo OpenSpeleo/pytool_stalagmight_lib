@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from stalagmight_lib import StalagMightParser
+from stalagmight_lib import StalagmightParser
 from stalagmight_lib import Survey
 from stalagmight_lib import read_stalx
 
@@ -12,7 +12,7 @@ from stalagmight_lib import read_stalx
 def test_parser_facade_and_native_json(database):
     before = database.read_bytes()
     mtime = database.stat().st_mtime_ns
-    parser = StalagMightParser(str(database))
+    parser = StalagmightParser(str(database))
     assert parser.filepath == Path(database)
     assert parser.data == read_stalx(database)
     assert parser.sections == parser.data.sections
@@ -27,4 +27,4 @@ def test_parser_facade_and_native_json(database):
 
 def test_parser_missing_file(tmp_path):
     with pytest.raises(FileNotFoundError):
-        StalagMightParser(tmp_path / "missing.stalx")
+        StalagmightParser(tmp_path / "missing.stalx")

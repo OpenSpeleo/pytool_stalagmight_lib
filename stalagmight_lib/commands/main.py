@@ -5,7 +5,7 @@ import sys
 
 from stalagmight_lib import __version__
 from stalagmight_lib.commands.convert import convert
-from stalagmight_lib.exceptions import StalagMightError
+from stalagmight_lib.exceptions import StalagmightError
 
 
 def main():
@@ -16,6 +16,6 @@ def main():
     args = parser.parse_args()
     try:
         return convert(args.args)
-    except (StalagMightError, OSError) as exc:
+    except (StalagmightError, OSError) as exc:
         sys.stderr.write(f"stalagmight: {exc}\n")
         return 1

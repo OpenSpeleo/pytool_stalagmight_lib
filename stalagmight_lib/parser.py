@@ -11,7 +11,7 @@ from pydantic import ValidationError
 
 from stalagmight_lib.exceptions import DatabaseReadError
 from stalagmight_lib.exceptions import DataValidationError
-from stalagmight_lib.exceptions import StalagMightFormatError
+from stalagmight_lib.exceptions import StalagmightFormatError
 from stalagmight_lib.exceptions import UnsupportedSchemaError
 from stalagmight_lib.graph import AzimuthReference
 from stalagmight_lib.graph import LoopClosure
@@ -56,7 +56,7 @@ def _columns(connection, table, columns, *, optional=False):
         or record[1] is None
         or not record[1].lstrip().upper().startswith("CREATE TABLE")
     ):
-        raise StalagMightFormatError(f"{table}: expected an ordinary table")
+        raise StalagmightFormatError(f"{table}: expected an ordinary table")
     # Names below are library constants, never supplied by the file or caller.
     available = {row[1] for row in connection.execute(f'PRAGMA table_info("{table}")')}
     missing = set(columns) - available
@@ -65,7 +65,7 @@ def _columns(connection, table, columns, *, optional=False):
             raise UnsupportedSchemaError(
                 "project.schema_version is missing; expected 18"
             )
-        raise StalagMightFormatError(f"{table}: missing columns {sorted(missing)}")
+        raise StalagmightFormatError(f"{table}: missing columns {sorted(missing)}")
     return True
 
 
@@ -245,12 +245,12 @@ def read_stalx(filepath: str | Path) -> Survey:
     if stat.S_ISDIR(mode):
         raise IsADirectoryError(path)
     if not stat.S_ISREG(mode):
-        raise StalagMightFormatError(f"{path}: expected a regular file")
+        raise StalagmightFormatError(f"{path}: expected a regular file")
     if path.suffix.lower() != ".stalx":
-        raise StalagMightFormatError(f"{path}: expected a .stalx extension")
+        raise StalagmightFormatError(f"{path}: expected a .stalx extension")
     with path.open("rb") as source:
         if source.read(16) != b"SQLite format 3\x00":
-            raise StalagMightFormatError(f"{path}: missing SQLite signature")
+            raise StalagmightFormatError(f"{path}: missing SQLite signature")
     try:
         with closing(
             sqlite3.connect(path.resolve().as_uri() + "?mode=ro", uri=True)
@@ -262,7 +262,7 @@ def read_stalx(filepath: str | Path) -> Survey:
         raise DatabaseReadError(f"{path}: {exc}") from exc
 
 
-class StalagMightParser:
+class StalagmightParser:
     """Eager convenience facade for :func:`read_stalx`."""
 
     def __init__(self, filepath: str | Path):

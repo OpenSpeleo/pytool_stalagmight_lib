@@ -1,6 +1,6 @@
 # stalagmight_lib
 
-Read native StalagMight `.stalx` surveys into immutable Pydantic v2 models.
+Read native Stalagmight `.stalx` surveys into immutable Pydantic v2 models.
 Python support is defined in `pyproject.toml` and the CI matrix. **Native
 schemas 18 and 19 are supported.**
 
@@ -26,7 +26,7 @@ schema = Survey.model_json_schema()
 ```
 
 `survey.shots` provides a tuple of all shots, ordered by section ID then
-sequence. `StalagMightParser(filepath)` eagerly reads the same survey and
+sequence. `StalagmightParser(filepath)` eagerly reads the same survey and
 exposes `filepath`, `data`, `sections`, `shots`, and `to_json()`.
 
 Shot comments belong to individual shots. Station comments remain separate in
@@ -45,11 +45,11 @@ symlinks and hardlinks, are rejected. Failures are reported on stderr with a
 nonzero exit code.
 
 ```python
-from stalagmight_lib import StalagMightError, read_stalx
+from stalagmight_lib import StalagmightError, read_stalx
 
 try:
     survey = read_stalx("survey.stalx")
-except StalagMightError as error:
+except StalagmightError as error:
     print(f"Invalid or unsupported survey: {error}")
 except OSError as error:
     print(f"Cannot access file: {error}")
@@ -91,10 +91,10 @@ but does not apply merges or calculate geometry.
 For maps, use the OpenSpeleo adapter and its shared exporter:
 
 ```python
-from openspeleo_lib.interfaces import StalagMightInterface
+from openspeleo_lib.interfaces import StalagmightInterface
 from openspeleo_lib.geojson import survey_to_geojson
 
-survey = StalagMightInterface.from_file("survey.stalx")
+survey = StalagmightInterface.from_file("survey.stalx")
 geojson = survey_to_geojson(survey)
 ```
 
@@ -112,7 +112,7 @@ attaches sections at the actual merged stations, including intermediate and
 final stations, and directs shots outward from those attachments. Reversal swaps
 depths and left/right, rotates the bearing 180 degrees, and reverses
 inclination. Native models remain unchanged. Additional merges are retained as
-native metadata and reported without closure adjustment.
+native metadata and reported without closure correction.
 
 Export graph IDs are deterministic nonnegative IDs, separate from native row
 IDs. The first occurrence of a valid v4 shot UUID supplies the optional feature
@@ -134,7 +134,7 @@ Native-only metadata, including positional station comments, does not become
 feature properties. Zero latitude/longitude is valid. Explicit anchors use the
 shared 500-metre consistency check; unanchored components are filtered, and a
 survey without any anchor raises `NoKnownAnchorError`. Section offsets, station
-moves, native adjusted maps, and loop-closure adjustments are not reproduced.
+moves, native adjusted maps, and loop-closure corrections are not reproduced.
 
 Each Pydantic model has independent Hypothesis property tests for its
 validation, immutability, and JSON round-trips. Parser regressions separately
@@ -150,23 +150,9 @@ including the native high-bit interior-start discriminant. Live origin cycles
 remain intact; broken retired ancestry and missing live mappings are rejected.
 The reader performs no migration, repair, renumbering, or native save.
 
-`stalagmight_lib.loop_closure.prepare_loop_closure` prepares native topology for
-`cave_closure`, a required dependency installed with the package. Callers
-explicitly select spatial or horizontal mode and provide independent Cartesian
-placement covariance through `sigma_m`. Horizontal loop closure also requires
-`preserved_z_policy="raw_endpoint_depth"`. Conflicting shared endpoint Z values
-are rejected rather than averaged. Root positions and geometry locks remain
-editing metadata. Native GPS datums require caller-projected ENU controls.
-
-Native closure records are evidence until activated. Aligned closures assert
-identity in the selected dimensions. Non-Move aligned closures require an
-explicit `baseline_policy="accept_potentially_adjusted_measurements"` because
-stored measurements may have been destructively adjusted. Otherwise use
-`baseline_policy="stored_measurements"`. These flags cannot recover original
-readings or prove history. Non-normal native shot kinds require a further
-explicit relationship interpretation and are currently rejected by
-normalization. Reader fidelity remains independent of numerical eligibility.
-
-Snapshots own source evidence and bind results to covariance, frame policies,
-and controls. OpenSpeleo can prepare and export these results directly without
-passing through its legacy display forest.
+Loop-closure preparation and geographic export belong to `openspeleo_lib`. Its
+Stalagmight adapter consumes these immutable native models and calls
+`cave_closure`. This reader has no solver dependency and does not compute
+coordinates or modify measurements. See the
+[OpenSpeleo API documentation](https://github.com/OpenSpeleo/pytool_openspeleo_lib#readme)
+for numerical preparation and export.

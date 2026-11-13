@@ -14,7 +14,7 @@ relevant columns must exist. Sections are ordered by ID, shots by sequence
 within their section, comments by station index, and datums/merges by row ID.
 Query count is independent of section count. Connections close on every exit.
 
-`StalagMightParser(filepath)` is an eager facade. `filepath` is a `Path`, `data`
+`StalagmightParser(filepath)` is an eager facade. `filepath` is a `Path`, `data`
 is a `Survey`, `sections` and `shots` are tuples, and `to_json() -> str`
 serializes `data` with two-space indentation. There are no native writers or
 lazy reads.
@@ -80,11 +80,11 @@ up a positional comment; no record and a nullable record both return `None`.
 
 ## Errors and JSON Schema
 
-All reader-specific errors inherit `StalagMightError`:
+All reader-specific errors inherit `StalagmightError`:
 
 | Exception                | Meaning                                                                                         |
 | ------------------------ | ----------------------------------------------------------------------------------------------- |
-| `StalagMightFormatError` | Wrong extension/container, missing required table/column, or non-ordinary table                 |
+| `StalagmightFormatError` | Wrong extension/container, missing required table/column, or non-ordinary table                 |
 | `UnsupportedSchemaError` | Unsupported, missing, or conflicting version markers                                            |
 | `DatabaseReadError`      | SQLite opening or query failure, including corrupt database pages                               |
 | `DataValidationError`    | Invalid stored records or relationships; includes table, row/section/sequence and field context |

@@ -3,7 +3,7 @@
 import argparse
 from pathlib import Path
 
-from stalagmight_lib.exceptions import StalagMightFormatError
+from stalagmight_lib.exceptions import StalagmightFormatError
 from stalagmight_lib.parser import read_stalx
 
 
@@ -24,7 +24,7 @@ def convert(args: list[str]) -> int:
     if source.resolve() == output.resolve() or (
         output.exists() and source.samefile(output)
     ):
-        raise StalagMightFormatError("Output refers to the input file")
+        raise StalagmightFormatError("Output refers to the input file")
     if output.exists() and not parsed.overwrite:
         raise FileExistsError(f"{output} exists; use --overwrite to replace it")
     survey = read_stalx(source)

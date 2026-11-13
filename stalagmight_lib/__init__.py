@@ -1,6 +1,7 @@
-"""Read native StalagMight schema-18/19 surveys into immutable Pydantic models."""
+"""Read native Stalagmight schema-18/19 surveys into immutable Pydantic models."""
 
 __version__ = "0.0.2"
+
 
 from stalagmight_lib.enums import CorrectionSource
 from stalagmight_lib.enums import NorthReference
@@ -8,13 +9,13 @@ from stalagmight_lib.enums import ShotKind
 from stalagmight_lib.enums import SurveyDirection
 from stalagmight_lib.exceptions import DatabaseReadError
 from stalagmight_lib.exceptions import DataValidationError
-from stalagmight_lib.exceptions import StalagMightError
-from stalagmight_lib.exceptions import StalagMightFormatError
+from stalagmight_lib.exceptions import StalagmightError
+from stalagmight_lib.exceptions import StalagmightFormatError
 from stalagmight_lib.exceptions import UnsupportedSchemaError
 from stalagmight_lib.graph import LoopClosure
 from stalagmight_lib.graph import ShotGraph
 from stalagmight_lib.graph import ShotNumbering
-from stalagmight_lib.parser import StalagMightParser
+from stalagmight_lib.parser import StalagmightParser
 from stalagmight_lib.parser import read_stalx
 from stalagmight_lib.section import StationComment
 from stalagmight_lib.section import SurveySection
@@ -36,9 +37,9 @@ __all__ = [
     "ShotGraph",
     "ShotKind",
     "ShotNumbering",
-    "StalagMightError",
-    "StalagMightFormatError",
-    "StalagMightParser",
+    "StalagmightError",
+    "StalagmightFormatError",
+    "StalagmightParser",
     "StationComment",
     "StationMerge",
     "Survey",

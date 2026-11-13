@@ -21,7 +21,6 @@ from stalagmight_lib.graph import ShotGraph
 from stalagmight_lib.graph import ShotNumbering
 from stalagmight_lib.graph import ShotOrigin
 from stalagmight_lib.graph import StationOffset
-from stalagmight_lib.loop_closure import prepare_loop_closure
 from tests.conftest import execute
 from tests.models.test_models import assert_model_contract
 
@@ -136,74 +135,3 @@ def test_all_graph_models_direct_contract(number):
         assert_model_contract(model)
     with pytest.raises(ValidationError):
         ShotGraph(origins=(ShotOrigin(number=number, parent=None),) * 2)
-
-
-def test_native_loop_closure_preserves_cycles_without_layout_cuts(database):
-    execute(database, "UPDATE shots SET length=10, depth_in=0, depth_out=0")
-    execute(
-        database,
-        "INSERT INTO shots SELECT 100, section_id, 1, azimuth_in, azimuth_out, "
-        "length, depth_in, depth_out, pitch_in, pitch_out, left_distance, "
-        "right_distance, up_distance, down_distance, comment, kind, marker_index, "
-        "temperature, NULL FROM shots",
-    )
-    schema19(
-        database,
-        origins={"1": 2, "2": 1},
-        identities={"42:legacy:0": 1, "42:legacy:1": 2},
-    )
-    native = read_stalx(database)
-    before = native.model_dump_json()
-    snapshot = prepare_loop_closure(
-        native,
-        mode="horizontal",
-        sigma_m=1.0,
-        baseline_policy="stored_measurements",
-        preserved_z_policy="raw_endpoint_depth",
-    )
-    result = snapshot.solve()
-    points = dict(result.coordinates)
-    assert points["shot:1/start"][:2] == points["shot:2/end"][:2]
-    assert points["shot:2/start"][:2] == points["shot:1/end"][:2]
-    assert len(result.observations) == 2
-    assert native.model_dump_json() == before
-
-
-def test_schema19_override_precedence_ignores_layout_and_editing_locks(database):
-    execute(
-        database,
-        "UPDATE shots SET length=10, depth_in=0, depth_out=0, "
-        "azimuth_in=90, azimuth_out=90",
-    )
-    execute(
-        database,
-        "UPDATE sections SET azimuth_north='true', azimuth_correction=20, "
-        "azimuth_source='manual'",
-    )
-    schema19(database)
-    graph = {
-        "initialized": True,
-        "explicit": True,
-        "origins": {"1": None},
-        "root_positions": {"1": [9999.0, 9999.0]},
-        "geometry_locks": {"1": True},
-        "azimuth_overrides": {
-            "1": {"north": "true", "correction": 30.0, "source": "manual"}
-        },
-    }
-    execute(
-        database,
-        "UPDATE project_settings SET value=? WHERE key='shot_graph'",
-        (json.dumps(graph),),
-    )
-    result = prepare_loop_closure(
-        read_stalx(database),
-        mode="spatial",
-        sigma_m=1.0,
-        baseline_policy="stored_measurements",
-    ).solve()
-    points = dict(result.coordinates)
-    actual = [
-        v - u for u, v in zip(points["shot:1/start"], points["shot:1/end"], strict=True)
-    ]
-    assert actual == pytest.approx((8.660254037844386, -5.0, 0.0), abs=1e-12)

@@ -9,7 +9,7 @@ import pytest
 from pydantic import ValidationError
 
 from stalagmight_lib import DataValidationError
-from stalagmight_lib import StalagMightFormatError
+from stalagmight_lib import StalagmightFormatError
 from stalagmight_lib import Survey
 from stalagmight_lib import read_stalx
 from tests.conftest import execute
@@ -93,7 +93,7 @@ def test_invalid_geographic_metadata(geographic, sql):
 def test_malformed_geographic_schema(geographic, table, replacement):
     execute(geographic, f"DROP TABLE {table}")
     execute(geographic, replacement.format(table=table))
-    with pytest.raises(StalagMightFormatError):
+    with pytest.raises(StalagmightFormatError):
         read_stalx(geographic)
 
 
